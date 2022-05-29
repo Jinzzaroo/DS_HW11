@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MaxVertex 10
+#define MAX_VERTICES 10
+#define FALSE 0
+#define TRUE 1
+short int visited[MAX_VERTICES];
 
 typedef struct graphNode
 {
@@ -12,7 +15,7 @@ typedef struct graphNode
 typedef struct graphType
 {
 	int n;
-	graphNode* headNode[MaxVertex];
+	graphNode* headNode[MAX_VERTICES];
 } graphType;
 
 int initializeGraph(graphType** graph);
@@ -20,6 +23,7 @@ int freeGraph(graphType* graph);
 int insertVertex(graphType* graph, int v);
 int insertEdge(graphType* graph, int v1, int v2);
 void printGraph(graphType* graph);
+int dfs(graphType* graph, int v);
 
 int main()
 {
@@ -63,6 +67,9 @@ int main()
 			break;
 		case 'd':
 		case 'D':
+			printf("\nDFS search : ");
+			dfs(graph, 0);
+			printf("\n");
 			break;
 		case 'b':
 		case 'B':
@@ -74,7 +81,7 @@ int main()
 			break;
 		case 'q':
 		case 'Q':
-            printf("\nFree graph memory...\n\n");
+			printf("\nFree graph memory...\n\n");
 			freeGraph(graph);
 			break;
 		default:
@@ -96,7 +103,7 @@ int initializeGraph(graphType** graph)
 	*graph = (graphType*)malloc(sizeof(graphType));
 
 	(*graph)->n = 0;
-	for (int v = 0; v < MaxVertex; v++)
+	for (int v = 0; v < MAX_VERTICES; v++)
 		(*graph)->headNode[v] = NULL;
 	return 1;
 }
@@ -106,7 +113,7 @@ int freeGraph(graphType* graph)
 	if (graph == NULL)
 		return -1;
 
-	for(int i = 0; i<MaxVertex; i++)
+	for (int i = 0; i < MAX_VERTICES; i++)
 	{
 		free(graph->headNode[i]);
 	}
@@ -122,7 +129,7 @@ int insertVertex(graphType* graph, int v)
 		return -1;
 	}
 
-	if ((graph->n) > (MaxVertex - 1))
+	if ((graph->n) > (MAX_VERTICES - 1))
 	{
 		printf("\nVertex Excess!\n");
 		return -1;
@@ -169,4 +176,23 @@ void printGraph(graphType* graph)
 		}
 		printf("\n");
 	}
+}
+
+int dfs(graphType* graph, int v)
+{
+	if (graph == NULL)
+	{
+		printf("\nInitialize first!\n");
+		return -1;
+	}
+
+	graphNode* p = NULL;
+	visited[v] = TRUE;
+	printf("%d ", v);
+	for (p = graph->headNode[v]; p != NULL; p = p->link)
+	{
+		if (!visited[p->vertex])
+			dfs(graph, p->vertex);
+	}
+	return 1;
 }
