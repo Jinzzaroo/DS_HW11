@@ -411,7 +411,7 @@ element deQueue(QType *LQ)
 	QNode *node = LQ->front;
 	element item;
 	if (isLQEmpty(LQ))
-		return;
+		return 0;
 	else
 	{
 		item = node->data;
